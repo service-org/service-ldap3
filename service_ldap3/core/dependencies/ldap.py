@@ -4,19 +4,29 @@
 
 from __future__ import annotations
 
+import logging
 import typing as t
 
 from ldap3 import NTLM
 from ldap3 import Server
 from ldap3 import ServerPool
 from ldap3 import Connection
+from logging import getLogger
+from ldap3.utils.log import NETWORK
 from service_core.core.context import WorkerContext
 from service_ldap3.constants import LDAP3_CONFIG_KEY
+from ldap3.utils.log import set_library_log_detail_level
 from service_core.core.service.dependency import Dependency
+from ldap3.utils.log import set_library_log_activation_level
+
+logger = getLogger(__name__)
 
 
 class Ldap(Dependency):
-    """ Ldap依赖类 """
+    """ Ldap依赖类
+
+    doc: https://ldap3.readthedocs.io/en/latest/index.html
+    """
 
     def __init__(
             self,
@@ -36,11 +46,12 @@ class Ldap(Dependency):
         @param connect_options: 连接配置
         """
         self.alias = alias
-        self.debug = debug
         self.server_pool = None
         self.srvlist_options = srvlist_options or []
         self.srvpool_options = srvpool_options or {}
         self.connect_options = connect_options or {}
+        debug and set_library_log_detail_level(NETWORK)
+        debug and set_library_log_activation_level(logging.DEBUG)
         super(Ldap, self).__init__(**kwargs)
 
     def setup(self) -> None:
