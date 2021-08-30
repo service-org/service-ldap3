@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import typing as t
 
+from ldap3 import NTLM
 from ldap3 import Server
 from ldap3 import ServerPool
 from ldap3 import Connection
@@ -57,6 +58,9 @@ class Ldap(Dependency):
         # 防止YAML中声明值为None
         self.connect_options = (connect_options or {}) | self.connect_options
         self.connect_options.setdefault('server', self.server_pool)
+        self.connect_options.setdefault('auto_bind', True)
+        self.connect_options.setdefault('authentication', NTLM)
+        self.connect_options.setdefault('pool_size', len(self.srvlist_options))
 
     def get_instance(self, context: WorkerContext) -> t.Any:
         """ 获取注入对象
