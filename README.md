@@ -62,7 +62,7 @@ class Service(BaseService):
     # 微服务简介
     desc = 'demo'
 
-    # 作为依赖项
+    # 域控的控制
     ad: LdapConnection = Ldap(alias='test')
 
     @croniter.cron('* * * * * */1')
