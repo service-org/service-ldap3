@@ -9,10 +9,10 @@ import typing as t
 
 from ldap3 import NTLM
 from ldap3 import Server
+from ldap3 import Connection
 from ldap3 import ServerPool
 from logging import getLogger
 from ldap3.utils.log import NETWORK
-from service_ldap3.core.connect import Connection
 from service_core.core.context import WorkerContext
 from service_ldap3.constants import LDAP3_CONFIG_KEY
 from ldap3.utils.log import set_library_log_detail_level

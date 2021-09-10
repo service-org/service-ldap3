@@ -46,10 +46,10 @@ LDAP3:
 from __future__ import annotations
 
 from logging import getLogger
+from ldap3 import Connection as LdapConnection
 from service_ldap3.core.dependencies import Ldap
 from service_croniter.core.entrypoints import croniter
 from service_core.core.service import Service as BaseService
-from service_ldap3.core.connect import Connection as LdapConnection
 
 logger = getLogger(__name__)
 
