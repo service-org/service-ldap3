@@ -4,18 +4,15 @@
 
 from __future__ import annotations
 
-import logging
 import typing as t
 
 from ldap3 import NTLM
 from ldap3 import Server
-from ldap3 import Connection
 from ldap3 import ServerPool
-from ldap3.utils.log import NETWORK
 from service_core.core.configure import Configure
 from service_ldap3.constants import LDAP3_CONFIG_KEY
-from ldap3.utils.log import set_library_log_detail_level
-from ldap3.utils.log import set_library_log_activation_level
+
+from .connect import Connection
 
 
 class LdapProxy(object):
@@ -43,8 +40,6 @@ class LdapProxy(object):
         self.srvlist_options = srvlist_options or []
         self.srvpool_options = srvpool_options or {}
         self.connect_options = connect_options or {}
-        debug and set_library_log_detail_level(NETWORK)
-        debug and set_library_log_activation_level(logging.DEBUG)
 
     def __call__(
             self,
@@ -63,8 +58,6 @@ class LdapProxy(object):
         @param connect_options: 连接配置
         """
         debug = debug or self.debug
-        debug and set_library_log_detail_level(NETWORK)
-        debug and set_library_log_activation_level(logging.DEBUG)
         srvlist_options = self.config.get(f'{LDAP3_CONFIG_KEY}.{alias}.srvlist_options', default=[])
         # 防止YAML中声明值为None
         self.srvlist_options += (srvlist_options or [])
@@ -72,12 +65,13 @@ class LdapProxy(object):
         # 防止YAML中声明值为None
         self.srvpool_options = (srvpool_options or {}) | self.srvpool_options
         self.srvpool_options.setdefault('servers', None)
-        self.server_pool = ServerPool(**self.srvpool_options)
-        for server_options in self.srvlist_options: self.server_pool.add(Server(**server_options))
+        server_pool = ServerPool(**self.srvpool_options)
+        for server_options in self.srvlist_options: server_pool.add(Server(**server_options))
         connect_options = self.config.get(f'{LDAP3_CONFIG_KEY}.{alias}.connect_options', default={})
         # 防止YAML中声明值为None
         self.connect_options = (connect_options or {}) | self.connect_options
-        self.connect_options.setdefault('server', self.server_pool)
+        self.connect_options.setdefault('debug', debug)
+        self.connect_options.setdefault('server', server_pool)
         self.connect_options.setdefault('auto_bind', True)
         self.connect_options.setdefault('authentication', NTLM)
         self.connect_options.setdefault('pool_size', len(self.srvlist_options))
