@@ -75,5 +75,5 @@ class LdapProxy(object):
         self.connect_options.setdefault('auto_bind', True)
         self.connect_options.setdefault('authentication', NTLM)
         self.connect_options.setdefault('pool_size', len(self.srvlist_options))
-        self.client = self.client or Connection(**self.connect_options)
-        return self.client
+        # 命令行无需缓存当前的连接
+        return Connection(**self.connect_options)
