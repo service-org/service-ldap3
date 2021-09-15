@@ -14,7 +14,7 @@ from ldap3.utils.log import set_library_log_activation_level
 
 
 class LdapClient(Connection):
-    """ Ldap3通用连接 """
+    """ Ldap3通用连接类 """
 
     def __init__(
             self,
