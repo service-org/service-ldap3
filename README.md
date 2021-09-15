@@ -46,7 +46,7 @@ LDAP3:
 from __future__ import annotations
 
 from logging import getLogger
-from ldap3 import Connection as LdapConnection
+from service_ldap3.core.client import LdapClient
 from service_ldap3.core.dependencies import Ldap
 from service_croniter.core.entrypoints import croniter
 from service_core.core.service import Service as BaseService
@@ -63,7 +63,7 @@ class Service(BaseService):
     desc = 'demo'
 
     # 域控的控制
-    ad: LdapConnection = Ldap(alias='test')
+    ad: LdapClient = Ldap(alias='test')
 
     @croniter.cron('* * * * * */1')
     def test_ldap_whoami(self) -> None:

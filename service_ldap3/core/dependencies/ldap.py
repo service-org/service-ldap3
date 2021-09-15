@@ -10,7 +10,7 @@ from ldap3 import NTLM
 from ldap3 import Server
 from ldap3 import ServerPool
 from logging import getLogger
-from service_ldap3.core.connect import Connection
+from service_ldap3.core.client import LdapClient
 from service_core.core.context import WorkerContext
 from service_ldap3.constants import LDAP3_CONFIG_KEY
 
@@ -66,7 +66,7 @@ class Ldap(Dependency):
         self.connect_options.setdefault('authentication', NTLM)
         self.connect_options.setdefault('pool_size', len(self.srvlist_options))
         # 主要用于共享同一个连接池
-        self.client = Connection(**self.connect_options)
+        self.client = LdapClient(**self.connect_options)
 
     def get_instance(self, context: WorkerContext) -> t.Any:
         """ 获取注入对象
