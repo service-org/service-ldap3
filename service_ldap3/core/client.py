@@ -21,7 +21,7 @@ class LdapClient(Connection):
             *args: t.Any,
             debug: t.Optional[bool] = None,
             base_dn: t.Optional[t.Text] = None,
-            **kwargs: t.Text
+            **kwargs: t.Any
     ) -> None:
         """ 初始化实例
 

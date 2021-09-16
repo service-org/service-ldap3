@@ -31,7 +31,7 @@ class Ldap(Dependency):
             srvlist_options: t.Optional[t.List[t.Dict[t.Text, t.Any]]] = None,
             srvpool_options: t.Optional[t.Dict[t.Text, t.Any]] = None,
             connect_options: t.Optional[t.Dict[t.Text, t.Any]] = None,
-            **kwargs: t.Text
+            **kwargs: t.Any
     ) -> None:
         """ 初始化实例
 
