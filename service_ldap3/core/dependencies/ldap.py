@@ -67,8 +67,6 @@ class Ldap(Dependency):
         self.connect_options.setdefault('auto_bind', True)
         self.connect_options.setdefault('authentication', NTLM)
         self.connect_options.setdefault('pool_size', len(self.srvlist_options))
-        # 主要用于共享同一个连接池
-        self.client = LdapClient(**self.connect_options)
 
     def get_instance(self, context: WorkerContext) -> t.Any:
         """ 获取注入对象
@@ -76,4 +74,4 @@ class Ldap(Dependency):
         @param context: 上下文对象
         @return: t.Any
         """
-        return self.client
+        return LdapClient(**self.connect_options)

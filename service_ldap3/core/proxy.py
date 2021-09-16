@@ -73,4 +73,3 @@ class LdapProxy(object):
         self.connect_options.setdefault('pool_size', len(self.srvlist_options))
         # 命令行无需缓存当前的连接
         return LdapClient(**self.connect_options)
-
