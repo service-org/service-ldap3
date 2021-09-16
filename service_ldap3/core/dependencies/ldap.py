@@ -66,7 +66,17 @@ class Ldap(Dependency):
         self.connect_options.setdefault('server', server_pool)
         self.connect_options.setdefault('auto_bind', True)
         self.connect_options.setdefault('authentication', NTLM)
+        # 开启心跳防止服务端断开
+        self.connect_options.setdefault('pool_keepalive', True)
         self.connect_options.setdefault('pool_size', len(self.srvlist_options))
+        self.client = LdapClient(**self.connect_options)
+
+    def stop(self) -> None:
+        """ 声明周期 - 关闭阶段
+
+        @return: None
+        """
+        self.client and self.client.unbind()
 
     def get_instance(self, context: WorkerContext) -> t.Any:
         """ 获取注入对象
@@ -74,4 +84,4 @@ class Ldap(Dependency):
         @param context: 上下文对象
         @return: t.Any
         """
-        return LdapClient(**self.connect_options)
+        return self.client
