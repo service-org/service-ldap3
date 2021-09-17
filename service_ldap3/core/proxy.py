@@ -63,15 +63,20 @@ class LdapProxy(object):
         self.srvpool_options.setdefault('active', True)
         self.srvpool_options.setdefault('exhaust', True)
         server_pool = ServerPool(**self.srvpool_options)
-        for server_options in self.srvlist_options: server_pool.add(Server(**server_options))
+        for server_options in self.srvlist_options:
+            server_options.setdefault('connect_timeout', 5)
+            server_pool.add(Server(**server_options))
         connect_options = self.config.get(f'{LDAP3_CONFIG_KEY}.{alias}.connect_options', default={})
         # 防止YAML中声明值为None
         self.connect_options = (connect_options or {}) | self.connect_options
-        self.connect_options.setdefault('server', server_pool)
         self.connect_options.setdefault('auto_bind', True)
+        self.connect_options.setdefault('server', server_pool)
         self.connect_options.setdefault('authentication', NTLM)
         # 开启心跳防止服务端断开
-        self.connect_options.setdefault('pool_keepalive', True)
+        self.connect_options.setdefault('pool_keepalive', 30)
+        self.connect_options.setdefault('pool_lifetime', 3600)
+        self.connect_options.setdefault('receive_timeout', 5)
+        self.connect_options.setdefault('raise_exceptions', True)
         self.connect_options.setdefault('pool_size', len(self.srvlist_options))
         # 命令行无需缓存当前的连接
         return LdapClient(**self.connect_options)
