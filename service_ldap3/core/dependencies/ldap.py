@@ -71,6 +71,7 @@ class Ldap(Dependency):
         # 开启心跳防止服务端断开
         self.connect_options.setdefault('pool_keepalive', 30)
         self.connect_options.setdefault('pool_lifetime', 3600)
+        self.connect_options.setdefault('receive_timeout', 5)
         self.connect_options.setdefault('raise_exceptions', True)
         self.connect_options.setdefault('pool_size', len(self.srvlist_options))
         self.client = LdapClient(**self.connect_options)
