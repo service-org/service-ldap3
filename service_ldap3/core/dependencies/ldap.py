@@ -66,7 +66,7 @@ class Ldap(Dependency):
         # 防止YAML中声明值为None
         self.connect_options = (connect_options or {}) | self.connect_options
         self.connect_options.setdefault('lazy', True)
-        self.connect_options.setdefault('auto_bind', False)
+        self.connect_options.setdefault('auto_bind', True)
         self.connect_options.setdefault('server', server_pool)
         self.connect_options.setdefault('authentication', NTLM)
         # 开启心跳防止服务端断开
