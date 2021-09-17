@@ -57,7 +57,7 @@ class Ldap(Dependency):
         self.srvpool_options = (srvpool_options or {}) | self.srvpool_options
         self.srvpool_options.setdefault('servers', None)
         self.srvpool_options.setdefault('active', True)
-        self.srvpool_options.setdefault('exhaust', True)
+        self.srvpool_options.setdefault('exhaust', False)
         server_pool = ServerPool(**self.srvpool_options)
         for server_options in self.srvlist_options: server_pool.add(Server(**server_options))
         connect_options = self.container.config.get(f'{LDAP3_CONFIG_KEY}.{self.alias}.connect_options', default={})
@@ -67,7 +67,8 @@ class Ldap(Dependency):
         self.connect_options.setdefault('auto_bind', True)
         self.connect_options.setdefault('authentication', NTLM)
         # 开启心跳防止服务端断开
-        self.connect_options.setdefault('pool_keepalive', True)
+        self.connect_options.setdefault('pool_keepalive', 30)
+        self.connect_options.setdefault('pool_lifetime', 3600)
         self.connect_options.setdefault('pool_size', len(self.srvlist_options))
         self.client = LdapClient(**self.connect_options)
 
