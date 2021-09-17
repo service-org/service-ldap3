@@ -65,13 +65,12 @@ class Ldap(Dependency):
         connect_options = self.container.config.get(f'{LDAP3_CONFIG_KEY}.{self.alias}.connect_options', default={})
         # 防止YAML中声明值为None
         self.connect_options = (connect_options or {}) | self.connect_options
-        self.connect_options.setdefault('auto_bind', True)
+        self.connect_options.setdefault('auto_bind', False)
         self.connect_options.setdefault('server', server_pool)
         self.connect_options.setdefault('authentication', NTLM)
         # 开启心跳防止服务端断开
         self.connect_options.setdefault('pool_keepalive', 30)
         self.connect_options.setdefault('pool_lifetime', 3600)
-        self.connect_options.setdefault('receive_timeout', 5)
         self.connect_options.setdefault('raise_exceptions', True)
         self.connect_options.setdefault('pool_size', len(self.srvlist_options))
         self.client = LdapClient(**self.connect_options)
@@ -89,4 +88,5 @@ class Ldap(Dependency):
         @param context: 上下文对象
         @return: t.Any
         """
+        self.client.bind()
         return self.client
