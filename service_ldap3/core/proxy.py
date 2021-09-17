@@ -59,9 +59,7 @@ class LdapProxy(object):
         srvpool_options = self.config.get(f'{LDAP3_CONFIG_KEY}.{alias}.srvpool_options', default={})
         # 防止YAML中声明值为None
         self.srvpool_options = (srvpool_options or {}) | self.srvpool_options
-        self.srvpool_options.setdefault('servers', None)
-        self.srvpool_options.setdefault('active', True)
-        self.srvpool_options.setdefault('exhaust', False)
+        self.srvpool_options.update({'servers': None})
         server_pool = ServerPool(**self.srvpool_options)
         for server_options in self.srvlist_options: server_pool.add(Server(**server_options))
         connect_options = self.config.get(f'{LDAP3_CONFIG_KEY}.{alias}.connect_options', default={})
