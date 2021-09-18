@@ -9,6 +9,7 @@ import typing as t
 from ldap3 import NTLM
 from ldap3 import Server
 from ldap3 import ServerPool
+from ldap3 import RESTARTABLE
 from logging import getLogger
 from service_ldap3.core.client import LdapClient
 from service_core.core.context import WorkerContext
@@ -61,12 +62,13 @@ class Ldap(Dependency):
         connect_options = self.container.config.get(f'{LDAP3_CONFIG_KEY}.{self.alias}.connect_options', default={})
         # 防止YAML中声明值为None
         self.connect_options = (connect_options or {}) | self.connect_options
-        self.connect_options.setdefault('auto_bind', False)
+        self.connect_options.setdefault('auto_bind', True)
         self.connect_options.update({'server': server_pool})
         self.connect_options.setdefault('authentication', NTLM)
         # 开启心跳防止服务端断开
-        self.connect_options.setdefault('pool_keepalive', 30)
+        self.connect_options.setdefault('pool_keepalive', 60)
         self.connect_options.setdefault('pool_lifetime', 3600)
+        self.connect_options.setdefault('client_strategy', RESTARTABLE)
         self.connect_options.setdefault('pool_size', len(self.srvlist_options))
         self.client = LdapClient(**self.connect_options)
 
@@ -83,5 +85,4 @@ class Ldap(Dependency):
         @param context: 上下文对象
         @return: t.Any
         """
-        self.client.bind()
         return self.client
