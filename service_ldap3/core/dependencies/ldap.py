@@ -12,7 +12,6 @@ from ldap3 import ServerPool
 from ldap3 import RESTARTABLE
 from logging import getLogger
 from service_ldap3.core.client import LdapClient
-from service_core.core.context import WorkerContext
 from service_ldap3.constants import LDAP3_CONFIG_KEY
 
 from service_core.core.service.dependency import Dependency
@@ -79,10 +78,9 @@ class Ldap(Dependency):
         """
         self.client and self.client.unbind()
 
-    def get_instance(self, context: WorkerContext) -> t.Any:
+    def get_instance(self) -> t.Any:
         """ 获取注入对象
 
-        @param context: 上下文对象
         @return: t.Any
         """
         return self.client
