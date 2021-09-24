@@ -78,9 +78,9 @@ class Ldap(Dependency):
         """
         self.client and self.client.unbind()
 
-    def get_instance(self) -> t.Any:
+    def get_instance(self) -> LdapClient:
         """ 获取注入对象
 
-        @return: t.Any
+        @return: LdapClient
         """
         return self.client
