@@ -25,6 +25,8 @@ class Ldap(Dependency):
     doc: https://ldap3.readthedocs.io/en/latest/index.html
     """
 
+    name = 'Ldap'
+
     def __init__(
             self,
             alias: t.Text,
