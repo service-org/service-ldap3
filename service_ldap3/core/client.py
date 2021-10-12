@@ -30,6 +30,9 @@ class LdapClient(Connection):
         @param args  : 位置参数
         @param kwargs: 命名选项
         """
+        # 主要用于特定场景下获取其汇总后的参数用于二次初始化或参数读取
+        self.src_args = args
+        self.src_kwargs = {'debug': debug, 'base_dn': base_dn} | kwargs
         self.base_dn = base_dn or ''
         debug and set_library_log_detail_level(NETWORK)
         debug and set_library_log_activation_level(logging.DEBUG)
